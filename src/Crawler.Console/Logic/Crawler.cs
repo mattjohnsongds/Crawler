@@ -46,6 +46,10 @@ namespace Crawler.Console.Logic
           }
         }
       }
+      catch (TaskCanceledException)
+      {
+        link.StatusCode = 408;
+      }
       catch (Exception exception)
       {
         System.Console.WriteLine(exception.ToString());
@@ -74,7 +78,7 @@ namespace Crawler.Console.Logic
           if (cache.ContainsKey(link.Uri.AbsoluteUri))
             return cache[link.Uri.AbsoluteUri];
 
-          link.AssociatedText = node.InnerText;
+          link.AssociatedText = (node.InnerText ?? String.Empty).Trim();
           link.NodeName = (node.Name ?? String.Empty).ToLowerInvariant();
           link.Attributes = node.Attributes.ToDictionary(a => a.Name, a => a.Value);
 
