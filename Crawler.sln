@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Crawler.Console", "src\Crawler.Console\Crawler.Console.xproj", "{110CC8CF-C4E7-48A9-9EB3-AF2E0843AD50}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Crawler.Console.Tests", "src\Crawler.Console.Tests\Crawler.Console.Tests.xproj", "{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,11 +24,16 @@ Global
 		{110CC8CF-C4E7-48A9-9EB3-AF2E0843AD50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{110CC8CF-C4E7-48A9-9EB3-AF2E0843AD50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{110CC8CF-C4E7-48A9-9EB3-AF2E0843AD50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{110CC8CF-C4E7-48A9-9EB3-AF2E0843AD50} = {4A554E8A-B27A-4A41-ACEF-D95F02DCE835}
+		{CA7CD9FE-88AA-41C8-8933-A91CDD2D73B2} = {4A554E8A-B27A-4A41-ACEF-D95F02DCE835}
 	EndGlobalSection
 EndGlobal
