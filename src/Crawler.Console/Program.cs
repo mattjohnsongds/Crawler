@@ -1,4 +1,5 @@
 ﻿using System;
+using Crawler.Console.Model;
 
 namespace Crawler.Console
 {
@@ -10,11 +11,11 @@ namespace Crawler.Console
       {
         System.Console.WriteLine("Enter the uri to crawl");
         var uri = System.Console.ReadLine();
-        var crawler = new Crawler();
-        var task = crawler.Crawl(uri);
+        var crawler = new Logic.Crawler();
+        var link = new Link(uri);
+        var task = crawler.CrawlLink(link);
         task.Wait();
-        var results = task.Result;
-        foreach (var result in results)
+        foreach (var result in link.Links)
         {
           System.Console.WriteLine(result);
         }
