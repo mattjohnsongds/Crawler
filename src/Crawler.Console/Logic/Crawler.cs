@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Crawler.Console.Model;
@@ -8,8 +9,15 @@ namespace Crawler.Console.Logic
 {
   public class Crawler
   {
-    public async Task CrawlLink(Link link)
+    private Dictionary<String, Link> cache = new Dictionary<String, Link>();
+
+    public async Task CrawlLink(Link link, Uri parentUri = null)
     {
+      if (cache.ContainsKey(link.Uri.AbsoluteUri))
+        return;
+
+      cache.Add(link.Uri.AbsoluteUri, link);
+
       try
       {
         var webClient = new System.Net.Http.HttpClient();
@@ -18,13 +26,25 @@ namespace Crawler.Console.Logic
         webClient.DefaultRequestHeaders.Add("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
         webClient.DefaultRequestHeaders.Add("Referer", "https://www.google.co.uk/");
         webClient.DefaultRequestHeaders.Add("Accept-Language", "en-US,en;q=0.8");
+        webClient.Timeout = TimeSpan.FromSeconds(5);
 
         var response = await webClient.GetAsync(link.Uri);
         link.StatusCode = (Int32)response.StatusCode;
-        var responseRaw = await response.Content.ReadAsStringAsync();
-        var htmlDocument = new HtmlDocument();
-        htmlDocument.LoadHtml(responseRaw);
-        link.Links = htmlDocument.DocumentNode.SelectNodes(@"//*[(@src or @href)]").Select(n => ConvertLink(link.Uri, n)).Where(l => l != null).ToList();
+        if (link.NodeName == "a" && (parentUri == null || parentUri.Host == link.Uri.Host))
+        {
+          var responseRaw = await response.Content.ReadAsStringAsync();
+          if (!String.IsNullOrWhiteSpace(responseRaw))
+          {
+            var htmlDocument = new HtmlDocument();
+            htmlDocument.LoadHtml(responseRaw);
+            if (htmlDocument.DocumentNode != null && htmlDocument.DocumentNode.HasChildNodes)
+            {
+              link.Links = htmlDocument.DocumentNode.SelectNodes(@"//*[(@src or @href)]").Select(n => ConvertLink(link.Uri, n)).Where(l => l != null).ToList();
+
+              Task.WaitAll(link.Links.Select(l => CrawlLink(l, link.Uri)).ToArray());
+            }
+          }
+        }
       }
       catch (Exception exception)
       {
@@ -50,6 +70,9 @@ namespace Crawler.Console.Logic
             link.Uri = new Uri($@"{parentUri.Scheme}://{parentUri.Host}{linkValue}");
           else
             link.Uri = new Uri(parentUri.AbsoluteUri.Substring(0, parentUri.AbsoluteUri.LastIndexOf("/", StringComparison.Ordinal)) + linkValue);
+
+          if (cache.ContainsKey(link.Uri.AbsoluteUri))
+            return cache[link.Uri.AbsoluteUri];
 
           link.AssociatedText = node.InnerText;
           link.NodeName = (node.Name ?? String.Empty).ToLowerInvariant();

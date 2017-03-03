@@ -10,6 +10,7 @@ namespace Crawler.Console.Model
     public Link(String uri)
     {
       Uri = new Uri(uri);
+      NodeName = "a";
     }
 
     public Uri Uri { get; set; }
